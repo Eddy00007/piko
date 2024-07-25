@@ -10,7 +10,7 @@
     <string name="piko_pref_undo_posts">Habilitar deshacer publicaciones</string>
     <string name="piko_pref_undo_posts_desc">Permite deshacer publicaciones antes de publicar</string>
     <string name="piko_pref_undo_posts_btn">Configuración de deshacer publicaciones</string>
-    <string name="piko_pref_icon_n_navbar_btn">Configuración de icono de la app y &#10;barra de navegación</string>
+    <string name="piko_pref_icon_n_navbar_btn">Configuración de icono de la app y barra de navegación</string>
 
     <string name="piko_title_download">Descargar</string>
     <string name="piko_pref_video_download">Habilitar descarga de videos</string>
