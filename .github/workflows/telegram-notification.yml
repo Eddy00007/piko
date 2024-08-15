@@ -1,4 +1,4 @@
-name: Notificación a Telegram cuando se modifica el archivo YAML
+name: Notificación a Telegram cuando se modifica el archivo YAML chan
 
 on:
   push:
