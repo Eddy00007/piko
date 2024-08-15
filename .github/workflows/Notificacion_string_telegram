@@ -5,7 +5,7 @@ on:
     branches:
       - dev
     paths:
-      - src/main/resources/twitter/settings/values/strings.xml  # Monitorea cambios en este archivo
+      - src/main/resources/twitter/settings/values-es/strings.xml  # Monitorea cambios en este archivo
 
 jobs:
   notify:
