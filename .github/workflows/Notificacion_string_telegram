@@ -1,37 +1,43 @@
-name: Notificación a Telegram cuando se modifica strings.xml
+name: Notificación de cambios en strings.xml
 
 on:
   push:
     branches:
-      - dev
-    paths:
-      - src/main/resources/twitter/settings/values-es/strings.xml  # Monitorea cambios en este archivo
+      - español  # La rama en la que está tu workflow
+  schedule:
+    - cron: '0 * * * *'  # Ejecución cada hora
 
 jobs:
-  notify:
+  check-updates:
     runs-on: ubuntu-latest
     
     steps:
     - name: Chequear el repositorio
       uses: actions/checkout@v3
-
-    - name: Verificar información del repositorio
+      with:
+        ref: dev  # Asegúrate de que estás trabajando con la rama dev
+    
+    - name: Verificar cambios en strings.xml
+      id: check_changes
       run: |
-        echo "Ramas disponibles:"
-        git branch -a
-        echo "Historial de commits recientes:"
-        git log --oneline -n 10
-        echo "Comparación de ramas:"
+        # Obtener el último commit que modificó strings.xml
         git fetch origin dev
-        git diff --name-only origin/dev...HEAD || true
+        git checkout dev
+        git log -1 --format=%H -- src/main/resources/twitter/settings/values-es/strings.xml > last_commit.txt
+        # Comparar con el último commit actual
+        if [ "$(cat last_commit.txt)" != "$(git rev-parse HEAD)" ]; then
+          echo "changed=true" >> $GITHUB_ENV
+        else
+          echo "changed=false" >> $GITHUB_ENV
+        fi
 
     - name: Enviar notificación a Telegram
-      if: github.event_name == 'push'
+      if: env.changed == 'true'
       uses: appleboy/telegram-action@master
       with:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         to: ${{ secrets.CHAT_ID }}
         message: |
-          Amo, se ha modificado el archivo String en Piko ❤  en el repositorio `${{ github.repository }}`.
+          🚨 Se ha modificado el archivo `strings.xml` en la rama `dev` de tu fork.
           Commit: `${{ github.event.head_commit.message }}`
           Ver cambios: [Enlace al commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
