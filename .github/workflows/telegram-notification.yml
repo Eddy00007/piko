@@ -1,12 +1,11 @@
-name: Notificación a Telegram cuando se modifica strings.xml
+name: Notificación a Telegram cuando se modifica el archivo YAML
 
-# El workflow se activa en el branch 'dev'
 on:
   push:
     branches:
-      - Español  # Monitorea la rama 'dev'
+      - Español
     paths:
-      - .github/workflows/telegram-notification.yml  # Monitorea cambios en este archivo
+      - .github/workflows/telegram-notification.yml
 
 jobs:
   notify:
@@ -16,23 +15,26 @@ jobs:
     - name: Chequear el repositorio
       uses: actions/checkout@v3
 
-    - name: Detectar cambios en strings.xml
+    - name: Detectar cambios en el archivo YAML
       id: changes
       run: |
-        git diff HEAD -- .github/workflows/telegram-notification.yml > changes.diff
+        set -e
+        git fetch origin Español
+        git diff origin/Español -- .github/workflows/telegram-notification.yml > changes.diff || true
         if [ -s changes.diff ]; then
           echo "Archivo modificado"
         else
-          echo "No hay cambios en strings.xml"
+          echo "No hay cambios en el archivo YAML"
           exit 1
+        fi
 
     - name: Enviar notificación a Telegram
-      if: success()  # Solo se ejecuta si hay cambios
+      if: success()
       run: |
         TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}
         CHAT_ID=${{ secrets.CHAT_ID }}
         DIFF=$(cat changes.diff)
         curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage \
           -d chat_id=${CHAT_ID} \
-          -d text="El archivo strings.xml ha sido modificado:\n\`\`\`\n${DIFF}\n\`\`\`" \
+          -d text="El archivo YAML ha sido modificado:\n\`\`\`\n${DIFF}\n\`\`\`" \
           -d parse_mode=Markdown
