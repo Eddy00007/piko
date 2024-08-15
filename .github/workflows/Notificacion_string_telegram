@@ -6,6 +6,7 @@ on:
       - español  # La rama en la que está tu workflow
   schedule:
     - cron: '0 * * * *'  # Ejecución cada hora
+  workflow_dispatch:  # Permite la ejecución manual
 
 jobs:
   check-updates:
