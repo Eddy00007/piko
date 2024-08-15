@@ -4,9 +4,9 @@ name: Notificación a Telegram cuando se modifica strings.xml
 on:
   push:
     branches:
-      - dev  # Monitorea la rama 'dev'
+      - Español  # Monitorea la rama 'dev'
     paths:
-      - src/main/resources/twitter/settings/values/strings.xml  # Monitorea cambios en este archivo
+      - src/main/resources/twitter/settings/values-es/strings.xml  # Monitorea cambios en este archivo
 
 jobs:
   notify:
