@@ -28,6 +28,10 @@ jobs:
           exit 1
         fi
 
+    - name: Mostrar los cambios detectados
+      if: failure()
+      run: cat changes.diff || true
+
     - name: Enviar notificación a Telegram
       if: success()
       run: |
