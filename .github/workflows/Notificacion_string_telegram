@@ -1,4 +1,4 @@
-name: Notificación de cambios en strings.xml
+name: Notificación de cambios en strings.xml a telegram
 
 on:
   push:
