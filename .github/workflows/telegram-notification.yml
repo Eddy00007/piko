@@ -30,7 +30,7 @@ jobs:
       uses: appleboy/telegram-action@master
       with:
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        to: ${{ secrets.TELEGRAM_TO }}
+        to: ${{ secrets.CHAT_ID }}
         message: |
           Se ha modificado el archivo `.github/workflows/telegram-notification.yml` en el repositorio `${{ github.repository }}`.
           Commit: `${{ github.event.head_commit.message }}`
