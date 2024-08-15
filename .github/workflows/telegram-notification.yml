@@ -6,7 +6,7 @@ on:
     branches:
       - Español  # Monitorea la rama 'dev'
     paths:
-      - src/main/resources/twitter/settings/values-es/strings.xml  # Monitorea cambios en este archivo
+      - .github/workflows/telegram-notification.yml  # Monitorea cambios en este archivo
 
 jobs:
   notify:
@@ -19,7 +19,7 @@ jobs:
     - name: Detectar cambios en strings.xml
       id: changes
       run: |
-        git diff HEAD -- src/main/resources/twitter/settings/values-es/strings.xml > changes.diff
+        git diff HEAD -- .github/workflows/telegram-notification.yml > changes.diff
         if [ -s changes.diff ]; then
           echo "Archivo modificado"
         else
