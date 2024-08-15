@@ -19,7 +19,7 @@ jobs:
     - name: Detectar cambios en strings.xml
       id: changes
       run: |
-        git diff HEAD~1 -- src/main/resources/twitter/settings/values-es/strings.xml > changes.diff
+        git diff HEAD -- src/main/resources/twitter/settings/values-es/strings.xml > changes.diff
         if [ -s changes.diff ]; then
           echo "Archivo modificado"
         else
