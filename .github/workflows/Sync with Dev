@@ -1,0 +1,22 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Ejecuta cada hora
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout fork
+      uses: actions/checkout@v3
+      with:
+        ref: dev
+
+    - name: Sync with upstream
+      run: |
+        git remote add upstream https://github.com/crimera/piko.git
+        git fetch upstream
+        git checkout dev
+        git merge upstream/dev
+        git push origin dev
