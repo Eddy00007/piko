@@ -32,6 +32,6 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         to: ${{ secrets.CHAT_ID }}
         message: |
-          Se ha modificado el archivo `.github/workflows/telegram-notification.yml` en el repositorio `${{ github.repository }}`.
+          Amo, se ha modificado el archivo String en Piko ❤ `.github/workflows/telegram-notification.yml` en el repositorio `${{ github.repository }}`.
           Commit: `${{ github.event.head_commit.message }}`
           Ver cambios: [Enlace al commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
