@@ -25,34 +25,13 @@ jobs:
         git fetch origin Español
         git diff --name-only origin/Español...HEAD || true
 
-    - name: Detectar cambios en el archivo YAML
-      id: changes
-      run: |
-        set -e
-        echo "Comparando cambios en el archivo YAML..."
-        git fetch origin Español
-        git diff --name-only origin/Español...HEAD
-        git diff --name-only origin/Español...HEAD | grep '.github/workflows/telegram-notification.yml' > changes.diff || true
-        echo "Contenido de changes.diff:"
-        cat changes.diff || true
-        if [ -s changes.diff ]; then
-          echo "Archivo modificado"
-        else
-          echo "No hay cambios en el archivo YAML"
-          exit 1
-        fi
-
-    - name: Mostrar los cambios detectados
-      if: failure()
-      run: cat changes.diff || true
-
     - name: Enviar notificación a Telegram
-      if: success()
-      run: |
-        TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}
-        CHAT_ID=${{ secrets.CHAT_ID }}
-        DIFF=$(cat changes.diff)
-        curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage \
-          -d chat_id=${CHAT_ID} \
-          -d text="El archivo YAML ha sido modificado:\n\`\`\`\n${DIFF}\n\`\`\`" \
-          -d parse_mode=Markdown
+      if: github.event_name == 'push'
+      uses: appleboy/telegram-action@master
+      with:
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        to: ${{ secrets.TELEGRAM_TO }}
+        message: |
+          Se ha modificado el archivo `.github/workflows/telegram-notification.yml` en el repositorio `${{ github.repository }}`.
+          Commit: `${{ github.event.head_commit.message }}`
+          Ver cambios: [Enlace al commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
