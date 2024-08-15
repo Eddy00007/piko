@@ -1,0 +1,44 @@
+name: Notificación de cambios en strings.xml a telegram
+
+on:
+  push:
+    branches:
+      - español  # La rama en la que está tu workflow
+  schedule:
+    - cron: '0 * * * *'  # Ejecución cada hora
+  workflow_dispatch:  # Permite la ejecución manual
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Chequear el repositorio
+      uses: actions/checkout@v3
+      with:
+        ref: dev  # Asegúrate de que estás trabajando con la rama dev
+    
+    - name: Verificar cambios en strings.xml
+      id: check_changes
+      run: |
+        # Obtener el último commit que modificó strings.xml
+        git fetch origin dev
+        git checkout dev
+        git log -1 --format=%H -- src/main/resources/twitter/settings/values-es/strings.xml > last_commit.txt
+        # Comparar con el último commit actual
+        if [ "$(cat last_commit.txt)" != "$(git rev-parse HEAD)" ]; then
+          echo "changed=true" >> $GITHUB_ENV
+        else
+          echo "changed=false" >> $GITHUB_ENV
+        fi
+
+    - name: Enviar notificación a Telegram
+      if: env.changed == 'true'
+      uses: appleboy/telegram-action@master
+      with:
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        to: ${{ secrets.CHAT_ID }}
+        message: |
+          🚨 Se ha modificado el archivo `strings.xml` en la rama `dev` de tu fork.
+          Commit: `${{ github.event.head_commit.message }}`
+          Ver cambios: [Enlace al commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
