@@ -1,4 +1,4 @@
-name: Notificación a Telegram cuando se modifica el archivo YAML chan
+name: Notificación a Telegram cuando se modifica el archivo YAML
 
 on:
   push:
@@ -15,12 +15,22 @@ jobs:
     - name: Chequear el repositorio
       uses: actions/checkout@v3
 
+    - name: Verificar información del repositorio
+      run: |
+        echo "Ramas disponibles:"
+        git branch -a
+        echo "Historial de commits recientes:"
+        git log --oneline -n 10
+        echo "Comparación de ramas:"
+        git fetch origin Español
+        git diff --name-only origin/Español...HEAD || true
+
     - name: Detectar cambios en el archivo YAML
       id: changes
       run: |
         set -e
+        echo "Comparando cambios en el archivo YAML..."
         git fetch origin Español
-        echo "Comparando cambios..."
         git diff --name-only origin/Español...HEAD
         git diff --name-only origin/Español...HEAD | grep '.github/workflows/telegram-notification.yml' > changes.diff || true
         echo "Contenido de changes.diff:"
