@@ -1,5 +1,4 @@
 name: Build and Release jar
-
 on:
   push:
     branches:
