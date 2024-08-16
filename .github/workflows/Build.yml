@@ -50,7 +50,10 @@ jobs:
             echo "No changelog found for version ${{ env.VERSION }}"
             changelog="No changelog available for this release."
           fi
+          echo "Extracted Changelog:"
+          echo "$changelog"
           echo "CHANGELOG=$changelog" >> $GITHUB_ENV
+
 
       - name: Create Git Tag
         run: |
