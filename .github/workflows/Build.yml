@@ -1,0 +1,80 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - Test  # Cambia esto a la rama que desees monitorear
+  workflow_dispatch:  # Para ejecutarlo manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
+      - name: Set Up Zulu JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          java-package: 'jdk'
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+
+      - name: Extract Version from gradle.properties
+        id: get_version
+        run: |
+          version=$(grep '^version' gradle.properties | cut -d'=' -f2 | xargs)
+          echo "VERSION=$version" >> $GITHUB_ENV
+          echo "Version found: $version"
+
+      - name: Extract Changelog for Version
+        id: extract_changelog
+        run: |
+          # Extrae la sección del CHANGELOG.md para la versión actual
+          version_header="## [${{ env.VERSION }}]"
+          changelog=$(awk "/$version_header/,/^## \[/" CHANGELOG.md | sed '$d')
+          echo "CHANGELOG=$changelog" >> $GITHUB_ENV
+
+      - name: Create Git Tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag -a "v${{ env.VERSION }}" -m "Release version ${{ env.VERSION }}"
+          git push origin "v${{ env.VERSION }}"
+
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: build/libs/*.jar
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ env.VERSION }}"
+          name: "${{ env.VERSION }}"
+          files: |
+            build/libs/*.jar
+            patches.json
+          body: |
+            ## Changelog
+            ${{ env.CHANGELOG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.Eve }}  # Asegúrate de que este secreto esté correctamente configurado
+
