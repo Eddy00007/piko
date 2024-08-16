@@ -6,6 +6,7 @@ on:
       - Test
     paths:
       - src/main/resources/twitter/settings/values/strings.xml  # Monitorea cambios en este archivo
+  workflow_dispatch:  # Para ejecutarlo manualmente
 
 jobs:
   notify:
