@@ -5,7 +5,7 @@ on:
     branches:
       - Test
     paths:
-      - src/main/resources/twitter/settings/values-es/strings.xml  # Monitorea cambios en este archivo
+      - src/main/resources/twitter/settings/values/strings.xml  # Monitorea cambios en este archivo
 
 jobs:
   notify:
@@ -22,8 +22,8 @@ jobs:
         echo "Historial de commits recientes:"
         git log --oneline -n 10
         echo "Comparación de ramas:"
-        git fetch origin Test
-        git diff --name-only origin/Test...HEAD || true
+        git fetch origin dev
+        git diff --name-only origin/dev...HEAD || true
 
     - name: Enviar notificación a Telegram
       if: github.event_name == 'push'
