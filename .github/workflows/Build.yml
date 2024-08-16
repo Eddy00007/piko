@@ -77,22 +77,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.Eve }}  # Asegúrate de que este secreto esté correctamente configurado
 
-    - name:   Send Message to Telegram
-      run: |
-        # Get the latest commit message as the changelog
-        changelog=$(git log -1 --pretty=format:"%s")
+      - name:   Send Message to Telegram
+        run: |
+          # Get the latest commit message as the changelog
+          changelog=$(git log -1 --pretty=format:"%s")
 
-        # Craft a more personalized message
-        message="¡Jefe! el parche se lanzó con éxito. 🎉
+          # Craft a more personalized message
+          message="¡Jefe! el parche se lanzó con éxito. 🎉
         
-        ¡Estoy segura de que lo disfrutará! 😊
-        Changelog:
-        ${changelog}
+          ¡Estoy segura de que lo disfrutará! 😊
+          Changelog:
+          ${changelog}
         
-        Espero que disfrute de esta actualización. Si necesita algo más, no dudes en decírmelo. 😘"
+          Espero que disfrute de esta actualización. Si necesita algo más, no dudes en decírmelo. 😘"
 
-        # Send the message
-        curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
+          # Send the message
+          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument" \
           -F chat_id="${{ secrets.CHAT_ID }}" \
           -F caption="${message}"
 
