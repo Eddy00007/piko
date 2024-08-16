@@ -3,7 +3,7 @@
 on:
   push:
     branches:
-      - Español
+      - Test
     paths:
       - src/main/resources/twitter/settings/values-es/strings.xml
   workflow_dispatch:  # Para ejecutarlo manualmente
@@ -23,8 +23,8 @@ runs-on: ubuntu-20.04  # Aquí especificas la versión LTS de Ubuntu que deseas 
         echo "Historial de commits recientes:"
         git log --oneline -n 10
         echo "Comparación de ramas:"
-        git fetch origin Español
-        git diff --name-only origin/Español...HEAD || true
+        git fetch origin Test
+        git diff --name-only origin/Test...HEAD || true
 
     - name: Enviar notificación a Telegram
       if: github.event_name == 'push'
