@@ -1,16 +1,15 @@
-      name: Notifica si string.xml a cambiado
+name: Notificación a Eve cuando se modifica String.xml
 
 on:
   push:
     branches:
       - Test
     paths:
-      - src/main/resources/twitter/settings/values-es/strings.xml
-  workflow_dispatch:  # Para ejecutarlo manualmente
+      - src/main/resources/twitter/settings/values-es/strings.xml  # Monitorea cambios en este archivo
 
 jobs:
   notify:
-runs-on: ubuntu-20.04  # Aquí especificas la versión LTS de Ubuntu que deseas usar
+    runs-on: ubuntu-latest
     
     steps:
     - name: Chequear el repositorio
@@ -33,6 +32,6 @@ runs-on: ubuntu-20.04  # Aquí especificas la versión LTS de Ubuntu que deseas 
         token: ${{ secrets.TELEGRAM_TOKEN }}
         to: ${{ secrets.CHAT_ID }}
         message: |
-          Amo👱🏻‍♀️, se ha modificado el archivo String en Piko ❤👀 `src/main/resources/twitter/settings/values-es/strings.xml` en el repositorio `${{ github.repository }}`.
+          Amo, se ha modificado el archivo String en Piko ❤ `src/main/resources/twitter/settings/values-es/strings.xml` en el repositorio `${{ github.repository }}`.
           Commit: `${{ github.event.head_commit.message }}`
           Ver cambios: [Enlace al commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
