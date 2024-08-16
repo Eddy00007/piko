@@ -32,6 +32,6 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         to: ${{ secrets.CHAT_ID }}
         message: |
-          Amo, se ha modificado el archivo String en Piko ❤ `src/main/resources/twitter/settings/values-es/strings.xml` en el repositorio `${{ github.repository }}`.
+          Amo, se ha modificado el archivo String en DEV ❤ `src/main/resources/twitter/settings/values/strings.xml` en el repositorio `${{ github.repository }}`.
           Commit: `${{ github.event.head_commit.message }}`
           Ver cambios: [Enlace al commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
