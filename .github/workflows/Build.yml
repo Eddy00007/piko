@@ -41,18 +41,19 @@ jobs:
           echo "Version found: $version"
 
       - name: Extract Changelog for Version
-        id: extract_changelog
-        run: |
-          version_header="## [${{ env.VERSION }}]"
-          changelog=$(awk "/^$version_header$/,/^## \[/" CHANGELOG.md | sed '$d' || true)
-          if [ -z "$changelog" ]; then
-            echo "No changelog found for version ${{ env.VERSION }}"
-            changelog="No changelog available for this release."
-          fi
-          # Reemplazar nuevas líneas por '\n' para asegurar que se preserve el formato en la publicación
-          changelog="${changelog//$'\n'/\\n}"
-          echo "Extracted Changelog: $changelog"
-          echo "CHANGELOG=$changelog" >> $GITHUB_ENV
+  id: extract_changelog
+  run: |
+    version_header="## [${{ env.VERSION }}]"
+    # Usa awk para extraer el changelog entre los encabezados
+    changelog=$(awk "/^$version_header/,/^## \[/" CHANGELOG.md | sed -n "/^$version_header/,\$p" | sed '$d' || true)
+    if [ -z "$changelog" ]; then
+      echo "No changelog found for version ${{ env.VERSION }}"
+      changelog="No changelog available for this release."
+    fi
+    # Reemplazar nuevas líneas por '\n' para asegurar que se preserve el formato en la publicación
+    changelog="${changelog//$'\n'/\\n}"
+    echo "Extracted Changelog: $changelog"
+    echo "CHANGELOG=$changelog" >> $GITHUB_ENV
 
       - name: Create Git Tag
         run: |
