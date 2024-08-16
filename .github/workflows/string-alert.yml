@@ -3,7 +3,7 @@ name: Notificación a Eve cuando se modifica String.xml
 on:
   push:
     branches:
-      - Test
+      - dev
     paths:
       - src/main/resources/twitter/settings/values/strings.xml  # Monitorea cambios en este archivo
 
