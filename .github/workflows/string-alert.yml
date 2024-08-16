@@ -3,7 +3,7 @@ name: Notificación a Eve cuando se modifica String.xml
 on:
   push:
     branches:
-      - dev
+      - Test
     paths:
       - src/main/resources/twitter/settings/values/strings.xml  # Monitorea cambios en este archivo
 
@@ -22,8 +22,8 @@ jobs:
         echo "Historial de commits recientes:"
         git log --oneline -n 10
         echo "Comparación de ramas:"
-        git fetch origin dev
-        git diff --name-only origin/dev...HEAD || true
+        git fetch origin Test
+        git diff --name-only origin/Test...HEAD || true
 
     - name: Enviar notificación a Telegram
       if: github.event_name == 'push'
