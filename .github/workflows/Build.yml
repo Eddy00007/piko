@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew generatePatchesFiles clean
+        run: ./gradlew build
 
       - name: Extract Version from gradle.properties
         id: get_version
@@ -49,7 +49,7 @@ jobs:
             echo "No changelog found for version ${{ env.VERSION }}"
             changelog="No changelog available for this release."
           fi
-          changelog="${changelog//$'\n'/\n}"
+          changelog="${changelog}"
           echo "Extracted Changelog: $changelog"
           echo "CHANGELOG=$changelog" >> $GITHUB_ENV
 
