@@ -1,0 +1,38 @@
+      name: Notifica si string.xml a cambiado
+
+on:
+  push:
+    branches:
+      - Español
+    paths:
+      - src/main/resources/twitter/settings/values-es/strings.xml
+  workflow_dispatch:  # Para ejecutarlo manualmente
+
+jobs:
+  notify:
+runs-on: ubuntu-20.04  # Aquí especificas la versión LTS de Ubuntu que deseas usar
+    
+    steps:
+    - name: Chequear el repositorio
+      uses: actions/checkout@v3
+
+    - name: Verificar información del repositorio
+      run: |
+        echo "Ramas disponibles:"
+        git branch -a
+        echo "Historial de commits recientes:"
+        git log --oneline -n 10
+        echo "Comparación de ramas:"
+        git fetch origin Español
+        git diff --name-only origin/Español...HEAD || true
+
+    - name: Enviar notificación a Telegram
+      if: github.event_name == 'push'
+      uses: appleboy/telegram-action@master
+      with:
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        to: ${{ secrets.CHAT_ID }}
+        message: |
+          Amo👱🏻‍♀️, se ha modificado el archivo String en Piko ❤👀 `src/main/resources/twitter/settings/values-es/strings.xml` en el repositorio `${{ github.repository }}`.
+          Commit: `${{ github.event.head_commit.message }}`
+          Ver cambios: [Enlace al commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
