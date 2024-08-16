@@ -44,9 +44,12 @@ jobs:
       - name: Extract Changelog for Version
         id: extract_changelog
         run: |
-          # Extrae la sección del CHANGELOG.md para la versión actual
           version_header="## [${{ env.VERSION }}]"
-          changelog=$(awk "/$version_header/,/^## \[/" CHANGELOG.md | sed '$d')
+          changelog=$(awk "/^$version_header$/,/^## \[/" CHANGELOG.md | sed '$d' || true)
+          if [ -z "$changelog" ]; then
+            echo "No changelog found for version ${{ env.VERSION }}"
+            changelog="No changelog available for this release."
+          fi
           echo "CHANGELOG=$changelog" >> $GITHUB_ENV
 
       - name: Create Git Tag
