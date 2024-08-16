@@ -1,10 +1,12 @@
 name: Notificación a Eve cuando se modifica String.xml
 
 on:
-  workflow_run:
-    workflows: ["Sync-dev-to-Test"]  # Nombre del workflow que debe completarse
-    types:
-      - completed  # Se ejecutará cuando la acción haya terminado (puede ser: completed, success, failure)
+  push:
+    branches:
+      - Test
+    paths:
+      - src/main/resources/twitter/settings/values/strings.xml  # Monitorea cambios en este archivo
+  workflow_dispatch:  # Para ejecutarlo manualmente
 
 jobs:
   notify:
@@ -25,6 +27,7 @@ jobs:
         git diff --name-only origin/Test...HEAD || true
 
     - name: Enviar notificación a Telegram
+      if: github.event_name == 'push'
       uses: appleboy/telegram-action@master
       with:
         token: ${{ secrets.TELEGRAM_TOKEN }}
