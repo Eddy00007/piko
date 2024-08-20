@@ -1,4 +1,4 @@
-name: Sync dev to Test, dev_español_tmp, dev_ESP
+name: Sync dev to Test, dev_espanol_tmp, dev_ESP
 
 on:
   push:
@@ -35,9 +35,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
-      # Paso para sincronizar dev -> dev_español_tmp
+      # Paso para sincronizar dev -> dev_espanol_tmp
       - name: Try to Merge dev into dev_Espanol_tmp
-        id: merge_dev_Español_tmp
+        id: merge_dev_Espanol_tmp
         run: |
           git checkout dev_Espanol_tmp
           git merge dev --no-ff --commit -m "Auto-merge dev into dev_Espanol_tmp"
