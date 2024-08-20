@@ -1,4 +1,4 @@
-name: Sync dev to Test, dev_espanol_tmp, dev_ESP
+name: Sync dev to Test
 
 on:
   push:
@@ -20,55 +20,25 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-      # Paso para sincronizar dev -> TEST
-      - name: Try to Merge dev into TEST
-        id: merge_tmp
+      - name: Try to Merge dev into Test
+        id: merge
         run: |
-          git checkout TEST
-          git merge dev --no-ff --commit -m "Auto-merge dev into TEST"
-        continue-on-error: true
+          git checkout Test
+          git merge dev --no-ff --commit -m "Auto-merge dev into Test"
+        continue-on-error: true  # Continúa incluso si hay un error
 
-      - name: Push changes to TEST branch
-        if: success()
+      # Push de los cambios si el merge fue exitoso
+      - name: Push changes to Test branch
+        if: success()  # Solo se ejecuta si el merge tuvo éxito
         run: |
-          git push origin TEST
+          git push origin Test
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
-      # Paso para sincronizar dev -> dev_espanol_tmp
-      - name: Try to Merge dev into dev_Espanol_tmp
-        id: merge_dev_Espanol_tmp
-        run: |
-          git checkout dev_Espanol_tmp
-          git merge dev --no-ff --commit -m "Auto-merge dev into dev_Espanol_tmp"
-        continue-on-error: true
-
-      - name: Push changes to dev_Espanol_tmp branch
-        if: success()
-        run: |
-          git push origin dev_Espanol_tmp
-        env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-
-      # Paso para sincronizar dev -> dev_ESP
-      - name: Try to Merge dev into dev_ESP
-        id: merge_dev_ESP
-        run: |
-          git checkout dev_ESP
-          git merge dev --no-ff --commit -m "Auto-merge dev into dev_ESP"
-        continue-on-error: true
-
-      - name: Push changes to dev_ESP branch
-        if: success()
-        run: |
-          git push origin dev_ESP
-        env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
-
-      # Enviar notificación si hay conflictos en alguno de los merges
+      # Enviar notificación si hay conflictos en el merge
       - name: Notify on Merge Conflict
-        if: failure()
+        if: failure()  # Solo se ejecuta si el paso de merge falla
         run: |
           curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage \
           -d chat_id=${{ secrets.CHAT_ID }} \
-          -d text="🚨 Conflicto detectado al intentar hacer merge de 'dev' en una de las ramas destino. Requiere intervención manual."
+          -d text="🚨 Conflicto detectado al intentar hacer merge de 'dev' en 'Test'. Requiere intervención manual."
