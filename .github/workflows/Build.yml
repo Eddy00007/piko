@@ -75,7 +75,7 @@ jobs:
 
           message="¡Jefe! el parche (${VERSION}) se lanzó con éxito. 🎉
         
-          ¡Estoy segura de que lo disfrutará! 😊
+          ¡Estoy segura de que lo disfrutará! 😊😘
           Changelog:
           ${changelog}
         
