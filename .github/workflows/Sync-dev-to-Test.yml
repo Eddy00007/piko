@@ -36,17 +36,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
       # Paso para sincronizar dev -> dev_español_tmp
-      - name: Try to Merge dev into dev_Español_tmp
+      - name: Try to Merge dev into dev_Espanol_tmp
         id: merge_dev_Español_tmp
         run: |
-          git checkout dev_Español_tmp
-          git merge dev --no-ff --commit -m "Auto-merge dev into dev_Español_tmp"
+          git checkout dev_Espanol_tmp
+          git merge dev --no-ff --commit -m "Auto-merge dev into dev_Espanol_tmp"
         continue-on-error: true
 
-      - name: Push changes to dev_Español_tmp branch
+      - name: Push changes to dev_Espanol_tmp branch
         if: success()
         run: |
-          git push origin dev_Español_tmp
+          git push origin dev_Espanol_tmp
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
