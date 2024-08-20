@@ -20,18 +20,18 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-      # Paso para sincronizar dev -> tmp
-      - name: Try to Merge dev into tmp
+      # Paso para sincronizar dev -> TEST
+      - name: Try to Merge dev into TEST
         id: merge_tmp
         run: |
-          git checkout tmp
-          git merge dev --no-ff --commit -m "Auto-merge dev into tmp"
+          git checkout TEST
+          git merge dev --no-ff --commit -m "Auto-merge dev into TEST"
         continue-on-error: true
 
-      - name: Push changes to tmp branch
+      - name: Push changes to TEST branch
         if: success()
         run: |
-          git push origin tmp
+          git push origin TEST
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
 
